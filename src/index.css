@@ -1,1 +1,14 @@
+@import "tailwindcss";
 
+@theme {
+  /* This creates a custom utility class: text-terminal-green or bg-terminal-green */
+  --color-terminal-green: #0ba122;
+  --color-terminal-black: #0a0a0a;
+}
+
+/* We set the default background to black and font to a monospace (typewriter) style */
+body {
+  background-color: var(--color-terminal-black);
+  color: var(--color-terminal-green);
+  font-family: 'Courier New', Courier, monospace;
+}

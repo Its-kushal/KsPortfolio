@@ -4,45 +4,43 @@ import TerminalLayout from "./components/terminal/TerminalLayout";
 const MainScreen = () => {
     const { viewMode, toggleViewMode } = useTheme();
 
+    // FACT: We explicitly tell the terminal to hide the cursor (cursor-none)
+    // FACT: We explicitly tell the standard view to show the cursor (cursor-auto)
+    // FACT: We removed 'cursor-none'. The mouse will now show up everywhere.
     const themeClasses =
         viewMode === "terminal"
-            ? "bg-[#050505] text-terminal-green font-mono cursor-none"
+            ? "bg-[#050505] text-terminal-green font-mono"
             : "bg-gray-100 text-gray-900 font-sans";
-
-    const buttonClasses =
-        viewMode === "terminal"
-            ? "border-terminal-green text-terminal-green hover:bg-terminal-green hover:text-black cursor-pointer"
-            : "border-gray-900 text-gray-900 hover:bg-gray-900 hover:text-white cursor-pointer";
 
     return (
         <div
-            className={`min-h-screen p-4 lg:p-8 flex flex-col transition-colors duration-500 ${themeClasses}`}
+            className={`min-h-screen p-2 lg:p-4 flex flex-col transition-colors duration-500 ${themeClasses}`}
         >
-            <div className="flex justify-between items-center mb-8 w-full max-w-[1600px] mx-auto">
-                <span className="text-sm font-bold opacity-50">
-                    KUSHAL_OS v1.0
-                </span>
-
-                <button
-                    onClick={toggleViewMode}
-                    className={`border px-4 py-1 text-sm font-bold transition-colors ${buttonClasses}`}
-                >
-                    {viewMode === "terminal"
-                        ? "[ Switch to Standard UI ]"
-                        : "[ Switch to Terminal UI ]"}
-                </button>
-            </div>
-
             {viewMode === "terminal" ? (
                 <TerminalLayout />
             ) : (
-                <div className="w-full max-w-7xl mx-auto border-2 border-gray-300 border-dashed p-12 text-center h-[80vh] flex items-center justify-center">
-                    <h2 className="text-2xl text-gray-400">Standard View</h2>
+                /* THE STANDARD VIEW (The Regular House) */
+                <div className="w-full max-w-7xl mx-auto border-2 border-gray-300 border-dashed p-12 text-center h-[80vh] flex flex-col items-center justify-center space-y-6">
+                    <h2 className="text-4xl text-gray-800 font-bold">
+                        Standard View
+                    </h2>
+                    <p className="text-gray-500">
+                        The mouse cursor is back! You can click things normally
+                        here.
+                    </p>
+
+                    {/* THE ESCAPE HATCH: Button to go back to Terminal */}
+                    <button
+                        onClick={toggleViewMode}
+                        className="mt-8 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg hover:bg-terminal-green hover:text-black transition-colors cursor-pointer"
+                    >
+                        Switch Back to Terminal OS
+                    </button>
                 </div>
             )}
         </div>
     );
-};
+};;
 
 export default function App() {
     return (

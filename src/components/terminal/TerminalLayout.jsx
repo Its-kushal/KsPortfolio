@@ -6,8 +6,12 @@ import { useTheme } from "../../context/ThemeContext";
 const ResumeView = () => (
     <div className="w-full h-full flex flex-col pointer-events-auto">
         <div className="flex-grow border border-terminal-green/30 bg-gray-900">
-            <iframe 
-                src="/Kushal-Khivasara-resume-v2-light.pdf" 
+            <iframe
+                // Option A: Just remove the leading slash to make it relative
+                // src="Kushal-Khivasara-resume-v2-light.pdf"
+                // Option B (Best Practice): Use the Vite base URL variable
+                src={`${import.meta.env.BASE_URL}Kushal-Khivasara-resume-v2-light.pdf`}
+
                 className="w-full h-full"
                 title="Kushal Resume"
             />

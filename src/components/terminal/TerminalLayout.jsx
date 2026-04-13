@@ -2,22 +2,7 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { Panel, Group, Separator } from "react-resizable-panels";
 import Pane from "../ui/Pane";
 import { useTheme } from "../../context/ThemeContext";
-
-const ResumeView = () => (
-    <div className="w-full h-full flex flex-col pointer-events-auto">
-        <div className="flex-grow border border-terminal-green/30 bg-gray-900">
-            <iframe
-                // Option A: Just remove the leading slash to make it relative
-                // src="Kushal-Khivasara-resume-v2-light.pdf"
-                // Option B (Best Practice): Use the Vite base URL variable
-                src={`${import.meta.env.BASE_URL}Kushal-Khivasara-resume-v2-light.pdf`}
-
-                className="w-full h-full"
-                title="Kushal Resume"
-            />
-        </div>
-    </div>
-);
+import { terminalContent } from "../../data/terminalData";
 
 export default function TerminalLayout() {
     const { toggleViewMode } = useTheme();
@@ -27,14 +12,7 @@ export default function TerminalLayout() {
     );
 
     const previewPanelRef = useRef(null);
-    const navItems = useMemo(() => [
-        { id: "about", label: "$ cd about_me", output: "Loading about_me.txt... \n\nHi, I am Kushal. I build high-performance systems." },
-        { id: "projects", label: "$ ls projects/", output: "drwxr-xr-x  Kernel-Smasher\ndrwxr-xr-x  React-Dashboard" },
-        { id: "resume", label: "$ cat resume.pdf", output: <ResumeView /> },
-        { id: "contact", label: "$ ./contact.sh", output: "Email: kushal@example.com\nGitHub: github.com/kushal" },
-        { id: "theme", label: "$ ./switch_gui.sh", action: "toggle_theme", output: "Switching to Standard UI..." },
-    ], []);
-
+    const navItems = useMemo(() => terminalContent, []);
     const executeCommand = (index) => {
         const selectedItem = navItems[index];
         if (selectedItem.action === "toggle_theme") {

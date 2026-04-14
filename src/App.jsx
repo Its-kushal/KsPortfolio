@@ -1,42 +1,33 @@
+import { useEffect } from "react";
 import { ThemeProvider, useTheme } from "./context/ThemeContext";
 import TerminalLayout from "./components/terminal/TerminalLayout";
-
+import StandardLayout from "./components/standard/StandardLayout";
 const MainScreen = () => {
-    const { viewMode, toggleViewMode } = useTheme();
-
+    const { viewMode, setViewMode } = useTheme();
+    useEffect(() => {
+        const checkScreenSize = () => {
+            if (window.innerWidth < 768) {
+                if (viewMode !== "standard") {
+                    setViewMode("standard");
+                }
+            }
+        };
+        checkScreenSize();
+        window.addEventListener("resize", checkScreenSize);
+        return () => window.removeEventListener("resize", checkScreenSize);
+    }, [viewMode, setViewMode]);
     const themeClasses =
         viewMode === "terminal"
-            ? "bg-[#050505] text-terminal-green font-mono"
-            : "bg-gray-100 text-gray-900 font-sans";
-
+            ? "bg-[#050505] text-terminal-green font-mono p-2 lg:p-4 select-none"
+            : "bg-white text-gray-900 font-sans cursor-auto";
     return (
         <div
-            className={`min-h-screen p-2 lg:p-4 flex flex-col transition-colors duration-500 ${themeClasses}`}
+            className={`min-h-screen flex flex-col transition-colors duration-500 ${themeClasses}`}
         >
-            {viewMode === "terminal" ? (
-                <TerminalLayout />
-            ) : (
-                <div className="w-full max-w-7xl mx-auto border-2 border-gray-300 border-dashed p-12 text-center h-[80vh] flex flex-col items-center justify-center space-y-6">
-                    <h2 className="text-4xl text-gray-800 font-bold">
-                        Standard View
-                    </h2>
-                    <p className="text-gray-500">
-                        The mouse cursor is back! You can click things normally
-                        here.
-                    </p>
-
-                    <button
-                        onClick={toggleViewMode}
-                        className="mt-8 px-6 py-3 bg-gray-900 text-white font-bold rounded-lg shadow-lg hover:bg-terminal-green hover:text-black transition-colors cursor-pointer"
-                    >
-                        Switch Back to Terminal OS
-                    </button>
-                </div>
-            )}
+            {viewMode === "terminal" ? <TerminalLayout /> : <StandardLayout />}
         </div>
     );
-};;
-
+};
 export default function App() {
     return (
         <ThemeProvider>

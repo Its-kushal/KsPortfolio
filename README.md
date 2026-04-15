@@ -1,16 +1,28 @@
-# React + Vite
+# Kushal Khivasara - Dual-UI Portfolio 🚀
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Welcome to my personal portfolio! This project is a unique web application featuring two distinct user interfaces: a fully keyboard-navigable **Terminal OS** view for desktop power users, and a clean, modern **Standard** view for mobile devices.
 
-Currently, two official plugins are available:
+## 🌟 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+* **Dual Interface System:** Conditionally renders a Linux-inspired Terminal UI or a standard web portfolio based on user preference and screen size.
+* **Terminal OS Mode:**
+  * **Keyboard Navigation:** Fully navigable using `↑` `↓` `←` `→` arrows, `Enter`, and `Esc`.
+  * **Resizable Panes:** Built with `react-resizable-panels` to mimic a true tiling window manager (like tmux or i3).
+  * **Live Previews:** Simulated commands (`neofetch`, `htop_progress`) and an integrated PDF viewer to read my resume directly in the terminal.
+* **Responsive Design:** Automatically detects screens smaller than 768px and forces the Standard UI to ensure a perfect mobile experience.
+* **Automated CI/CD:** Deploys automatically to GitHub Pages using GitHub Actions whenever changes are pushed to the `main` branch.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+* **Framework:** React 19 + Vite
+* **Styling:** Tailwind CSS v4
+* **Components & Utilities:** `react-resizable-panels`, `framer-motion`, `lucide-react`
+* **Deployment:** GitHub Pages (via GitHub Actions)
 
-## Expanding the ESLint configuration
+## 🚀 Local Setup & Installation
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+To run this project on your local machine, follow these steps:
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/Its-kushal/KsPortfolio.git](https://github.com/Its-kushal/KsPortfolio.git)

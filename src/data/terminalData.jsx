@@ -3,7 +3,7 @@ import ResumeView from "../components/terminal/ResumeView";
 export const terminalContent = [
     {
         id: "about",
-        label: "$ cd about_me",
+        label: "$ cat about_me",
         output: "Loading about_me.txt... \n\nHi, I am Kushal. I build high-performance systems.",
     },
     {

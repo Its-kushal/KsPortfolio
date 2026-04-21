@@ -1,7 +1,7 @@
 import { useTheme } from "../../context/ThemeContext";
 export default function StandardLayout() {
     const { toggleViewMode } = useTheme();
-    const resumePath = `${import.meta.env.BASE_URL}Kushal-Khivasara-resume-v2.pdf`;
+    const resumePath = `${import.meta.env.BASE_URL}Resume.pdf`;
     return (
         <div className="w-full max-w-5xl mx-auto px-6 py-12 md:py-24 flex flex-col min-h-screen">
             <header className="flex justify-between items-center mb-16">
@@ -40,7 +40,7 @@ export default function StandardLayout() {
                 <div className="flex flex-col sm:flex-row gap-4">
                     <a
                         href={resumePath}
-                        download="Kushal_Resume.pdf"
+                        download="Resume.pdf"
                         className="flex items-center justify-center bg-blue-600 text-white px-8 py-4 rounded-lg font-bold hover:bg-blue-700 transition-colors shadow-lg shadow-blue-600/20"
                     >
                         Download Resume

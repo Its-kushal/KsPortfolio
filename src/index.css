@@ -12,3 +12,5 @@ body {
   color: var(--color-terminal-green);
   font-family: 'Courier New', Courier, monospace;
 }
+
+@custom-variant dark (&:where(.dark, .dark *));

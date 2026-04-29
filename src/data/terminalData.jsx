@@ -29,17 +29,17 @@ Machine Learning, I build everything from algorithmic trading engines processing
 high-volume financial data to cutting-edge LLM and RAG architectures. Whether I \
 am architecting a custom ERP or deploying production-grade ML models, my goal is \
 to design robust, high-performance solutions that solve real-world problems and \
-drive measurable results.",
+drive measurable results."
     },
     {
         id: "projects",
         label: "$ ls projects/",
-        output: "drwxr-xr-x  Kernel-Smasher\ndrwxr-xr-x  React-Dashboard",
+        output: "drwxr-xr-x  Kernel-Smasher\ndrwxr-xr-x  React-Dashboard"
     },
     {
         id: "resume",
         label: "$ cat resume.pdf",
-        output: <ResumeView />,
+        output: <ResumeView />
     },
     {
         id: "contact",
@@ -135,12 +135,18 @@ drive measurable results.",
                     </p>
                 </div>
             </div>
-        ),
+        )
     },
     {
         id: "theme",
         label: "$ ./switch_gui.sh",
-        action: "toggle_theme",
-        output: "Switching to Standard UI...",
+        action: "toggle_theme_execute",
+        output: "Switch to Standard UI"
     },
+    {
+        id: "exit",
+        label: "$ poweroff",
+        action: "poweroff_app_execute",
+        output: "Shut down system"
+    }
 ];

@@ -4,10 +4,20 @@ import Pane from "../ui/Pane";
 import { useTheme } from "../../context/ThemeContext";
 import { terminalContent } from "../../data/terminalData";
 import DetailsPane from "./DetailsPane";
+import PowerSequence from "./PowerSequence";
 
 export default function TerminalLayout() {
     const { toggleViewMode } = useTheme();
     const [activeIndex, setActiveIndex] = useState(0);
+    const [systemStatus, setSystemStatus] = useState(() => {
+        const hasBooted = sessionStorage.getItem("hasBooted");
+        return hasBooted ? "running" : "booting";
+    });
+    useEffect(() => {
+        if (systemStatus === "running") {
+            sessionStorage.setItem("hasBooted", "true");
+        }
+    }, [systemStatus]);
     const [previewContent, setPreviewContent] = useState(
         "Use Arrow Keys to navigate. Press Enter/Right arrow to select.",
     );
@@ -15,8 +25,10 @@ export default function TerminalLayout() {
     const navItems = useMemo(() => terminalContent, []);
     const executeCommand = (index) => {
         const selectedItem = navItems[index];
-        if (selectedItem.action === "toggle_theme") {
+        if (selectedItem.action === "toggle_theme_execute") {
             toggleViewMode();
+        } else if (selectedItem.action === "poweroff_app_execute") {
+            setSystemStatus("shutting_down");
         } else {
             setPreviewContent(selectedItem.output);
             if (selectedItem.id === "contact") {
@@ -29,6 +41,7 @@ export default function TerminalLayout() {
     };
     useEffect(() => {
         const handleKeyDown = (e) => {
+            if (systemStatus !== "running") return;
             if (e.key === "Tab") {
                 const firstLink = document.querySelector(".contact-link");
                 if (
@@ -45,15 +58,21 @@ export default function TerminalLayout() {
             }
             let newIndex = activeIndex;
             if (e.key === "ArrowDown") {
-                newIndex = activeIndex < navItems.length - 1 ? activeIndex + 1 : activeIndex;
+                newIndex =
+                    activeIndex < navItems.length - 1
+                        ? activeIndex + 1
+                        : activeIndex;
             } else if (e.key === "ArrowUp") {
                 newIndex = activeIndex > 0 ? activeIndex - 1 : activeIndex;
             }
             if (newIndex !== activeIndex) {
                 setActiveIndex(newIndex);
-                const highlightedItem = navItems[newIndex];   
-                if (highlightedItem.action === "toggle_theme") {
-                    setPreviewContent(">> Executable Script Detected <<\n\nPress [ENTER] or [RIGHT ARROW] to execute this script and switch to the Standard UI.");
+                const highlightedItem = navItems[newIndex];
+                const executableRegex = /_execute$/;
+                if (executableRegex.test(highlightedItem.action)) {
+                    setPreviewContent(
+                        `>> Executable Script Detected <<\n\nPress [ENTER] to execute this script.\n\n${highlightedItem.output}`,
+                    );
                 } else {
                     setPreviewContent(highlightedItem.output);
                 }
@@ -61,14 +80,26 @@ export default function TerminalLayout() {
             if (e.key === "ArrowRight" || e.key === "Enter") {
                 executeCommand(activeIndex);
             } else if (e.key === "ArrowLeft" || e.key === "Escape") {
-                setPreviewContent("Use Arrow Keys to navigate. Press Enter/Right to select.");
+                setPreviewContent(
+                    "Use Arrow Keys to navigate. Press Enter/Right to select.",
+                );
                 if (previewPanelRef.current) previewPanelRef.current.resize(50);
             }
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [activeIndex, navItems, toggleViewMode]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [activeIndex, navItems, toggleViewMode, systemStatus]);
+    if (systemStatus !== "running") {
+        return (
+            <div className="w-full max-w-[1600px] mx-auto h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)] border-2 border-terminal-c shadow-[0_0_15px_rgba(48,159,207,0.2)]">
+                <PowerSequence
+                    systemStatus={systemStatus}
+                    setSystemStatus={setSystemStatus}
+                />
+            </div>
+        );
+    }
     return (
         <div className="w-full max-w-[1600px] mx-auto h-[calc(100vh-16px)] lg:h-[calc(100vh-32px)]">
             <div className="h-full">
@@ -85,7 +116,7 @@ export default function TerminalLayout() {
                                 <div className="text-[clamp(14px,1.2vw,18px)] opacity-90">
                                     USE [↑] [↓] ARROWS TO NAVIGATE.
                                     <br />
-                                    USE [TAB] TO JUMP PANES.
+                                    USE [ENTER] TO RUN THE COMMAND
                                 </div>
                             </div>
                             <div className="space-y-2 font-mono text-[clamp(16px,1.5vw,22px)]">
@@ -130,7 +161,7 @@ export default function TerminalLayout() {
                                 orientation="vertical"
                                 style={{ height: "100%" }}
                             >
-                                <Panel defaultSize={50} minSize={20}>
+                                <Panel defaultSize={65} minSize={20}>
                                     <Pane title="Details">
                                         <DetailsPane />
                                     </Pane>
@@ -138,7 +169,7 @@ export default function TerminalLayout() {
                                 <Separator className="h-2 flex items-center justify-center transition-colors duration-200 bg-transparent hover:bg-terminal-c/50 cursor-row-resize">
                                     <div className="h-0.5 w-4 bg-terminal-c/30" />
                                 </Separator>
-                                <Panel defaultSize={50} minSize={20}>
+                                <Panel defaultSize={35} minSize={20}>
                                     <Pane title="Resources In Hand">
                                         <div className="text-[clamp(14px,1.2vw,18px)] space-y-3 p-2">
                                             <div>

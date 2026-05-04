@@ -9,15 +9,7 @@ import PowerSequence from "./PowerSequence";
 export default function TerminalLayout() {
     const { toggleViewMode } = useTheme();
     const [activeIndex, setActiveIndex] = useState(0);
-    const [systemStatus, setSystemStatus] = useState(() => {
-        const hasBooted = sessionStorage.getItem("hasBooted");
-        return hasBooted ? "running" : "booting";
-    });
-    useEffect(() => {
-        if (systemStatus === "running") {
-            sessionStorage.setItem("hasBooted", "true");
-        }
-    }, [systemStatus]);
+    const [systemStatus, setSystemStatus] = useState("booting");
     const [previewContent, setPreviewContent] = useState(
         "Use Arrow Keys to navigate. Press Enter/Right arrow to select.",
     );

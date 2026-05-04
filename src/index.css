@@ -1,12 +1,26 @@
 @import "tailwindcss";
 
 @theme {
-  /* This creates a custom utility class: text-terminal-c or bg-terminal-c */
   --color-terminal-c: #309fcf;
   --color-terminal-black: #0a0a0a;
 }
 
-/* We set the default background to black and font to a monospace (typewriter) style */
+:root {
+  --primary-color: #309fcf; 
+  --bg-color: #f3f4f6; 
+  --surface-color: #ffffff; 
+  --text-main: #111827; 
+  --text-muted: #6b7280;
+}
+
+.dark {
+  --primary-color: #D4AF37;
+  --bg-color: #050505; 
+  --surface-color: #111111; 
+  --text-main: #f9fafb; 
+  --text-muted: #9ca3af;
+}
+
 body {
   background-color: var(--color-terminal-black);
   color: var(--color-terminal-c);

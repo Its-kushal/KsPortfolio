@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
+
 const shutdownLogs = [
     "[ OK ] Stopping network services...",
     "[ OK ] Unmounting filesystems: /dev/sda1",
@@ -6,6 +7,7 @@ const shutdownLogs = [
     "[ OK ] Sending SIGTERM to all processes...",
     "System halted. Powering down.",
 ];
+
 const bootLogs = [
     "Booting from Hard Disk...",
     "Loading Linux kernel...",
@@ -14,57 +16,84 @@ const bootLogs = [
     "[ OK ] Started Network Manager.",
     "Initializing Terminal UI...",
 ];
+
 export default function PowerSequence({ systemStatus, setSystemStatus }) {
     const [lines, setLines] = useState([]);
     const [progress, setProgress] = useState(0);
+
+    const skipBoot = useCallback(() => {
+        setSystemStatus("running");
+    }, [setSystemStatus]);
+
     useEffect(() => {
         let isCancelled = false;
+
+        const prefersReducedMotion =
+            typeof window !== "undefined" &&
+            window.matchMedia &&
+            window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
         const runShutdown = async () => {
             setLines([]);
+            if (prefersReducedMotion) {
+                setLines(shutdownLogs);
+                setSystemStatus("powered_off");
+                return;
+            }
             for (const log of shutdownLogs) {
                 if (isCancelled) return;
                 setLines((prev) => [...prev, log]);
-                await new Promise((r) =>
-                    setTimeout(r, 300 + Math.random() * 300),
-                );
+                await new Promise((r) => setTimeout(r, 200));
             }
             if (!isCancelled) {
-                setTimeout(() => setSystemStatus("powered_off"), 1000);
+                setTimeout(() => setSystemStatus("powered_off"), 300);
             }
         };
+
         const runBoot = async () => {
             setLines([]);
+            if (prefersReducedMotion) {
+                setLines(bootLogs);
+                setProgress(100);
+                setSystemStatus("running");
+                return;
+            }
+
             for (const log of bootLogs) {
                 if (isCancelled) return;
                 setLines((prev) => [...prev, log]);
-                await new Promise((r) =>
-                    setTimeout(r, 200 + Math.random() * 200),
-                );
+                await new Promise((r) => setTimeout(r, 150));
             }
-            for (let i = 0; i <= 100; i += 2) {
+            for (let i = 0; i <= 100; i += 4) {
                 if (isCancelled) return;
                 setProgress(i);
-                await new Promise((r) => setTimeout(r, 20));
+                await new Promise((r) => setTimeout(r, 15));
             }
             if (!isCancelled) {
-                setTimeout(() => setSystemStatus("running"), 500);
+                setTimeout(() => setSystemStatus("running"), 300);
             }
         };
+
         if (systemStatus === "shutting_down") runShutdown();
         if (systemStatus === "booting") runBoot();
+
         return () => {
             isCancelled = true;
         };
     }, [systemStatus, setSystemStatus]);
+
     useEffect(() => {
         const handleKeyDown = (e) => {
             if (systemStatus === "powered_off" && e.key === "Enter") {
                 setSystemStatus("booting");
+            } else if (systemStatus === "booting" && (e.key === "Escape" || e.key === "Enter")) {
+                skipBoot();
             }
         };
         window.addEventListener("keydown", handleKeyDown);
         return () => window.removeEventListener("keydown", handleKeyDown);
-    }, [systemStatus, setSystemStatus]);
+    }, [systemStatus, setSystemStatus, skipBoot]);
+
     if (systemStatus === "powered_off") {
         return (
             <div className="w-full h-full flex flex-col items-center justify-center bg-[#050505]">
@@ -72,6 +101,7 @@ export default function PowerSequence({ systemStatus, setSystemStatus }) {
                     SYSTEM SUSPENDED
                 </div>
                 <button
+                    type="button"
                     onClick={() => setSystemStatus("booting")}
                     className="px-8 py-3 border-2 border-terminal-c bg-terminal-c text-black font-mono font-extrabold uppercase tracking-widest outline-none animate-pulse shadow-[0_0_20px_rgba(48,159,207,0.6)] cursor-pointer hover:bg-white hover:border-white focus:bg-white focus:border-white transition-all duration-300"
                 >
@@ -83,9 +113,13 @@ export default function PowerSequence({ systemStatus, setSystemStatus }) {
             </div>
         );
     }
+
     return (
         <div className="w-full h-full bg-[#050505] text-terminal-c font-mono p-4 flex flex-col items-center justify-center overflow-hidden select-none">
             <div className="w-full max-w-2xl space-y-1">
+                <div className="text-right text-xs text-terminal-c/50 mb-2">
+                    [ESC / ENTER to Skip]
+                </div>
                 {lines.map((line, idx) => (
                     <div
                         key={idx}

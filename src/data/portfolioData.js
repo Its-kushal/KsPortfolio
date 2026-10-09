@@ -196,6 +196,21 @@ export const certificatesData = [
 
 export const careerData = [
     {
+        id: "exp-tcs-aiml",
+        role: "AIML Trainee",
+        organization: "Tata Consultancy Services (TCS)",
+        location: "Mumbai, India",
+        period: "21st May 2026 – Present",
+        type: "Experience",
+        summary:
+            "Joined TCS on 21st May 2026 as an AIML Trainee, focusing on enterprise artificial intelligence, machine learning architectures, and scalable intelligent systems.",
+        highlights: [
+            "Undergoing structured technical training in enterprise AI/ML architectures, deep learning models, and modern data engineering.",
+            "Building and evaluating end-to-end machine learning pipelines and predictive analytics workflows.",
+            "Collaborating on scalable AI-driven solutions and production-grade engineering practices.",
+        ],
+    },
+    {
         id: "exp-freelance",
         role: "Freelance Full Stack Developer",
         organization: "Client Engagement (WholeSaleManager)",

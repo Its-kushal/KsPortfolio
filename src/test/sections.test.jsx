@@ -63,6 +63,15 @@ describe("Standard Section Components", () => {
         it("renders career milestones and highlights", () => {
             render(<CareerSection />);
             expect(
+                screen.getByText("AIML Trainee"),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText("Tata Consultancy Services (TCS)"),
+            ).toBeInTheDocument();
+            expect(
+                screen.getByText(/21st May 2026 – Present/),
+            ).toBeInTheDocument();
+            expect(
                 screen.getByText("Freelance Full Stack Developer"),
             ).toBeInTheDocument();
             expect(

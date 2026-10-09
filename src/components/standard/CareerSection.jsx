@@ -9,7 +9,7 @@ export default function CareerSection() {
                     Professional Experience & Career
                 </h3>
                 <p className="text-[var(--text-muted)] text-base max-w-2xl">
-                    Engineering history spanning commercial ERP implementations, financial systems, and systems engineering.
+                    Engineering history spanning enterprise AI/ML solutions, commercial ERP implementations, and systems engineering.
                 </p>
             </div>
 

@@ -80,7 +80,7 @@ describe("Standard Section Components", () => {
                 ),
             ).toBeInTheDocument();
             expect(
-                screen.getByText(/June 2025 – Present/),
+                screen.getByText(/June 2025 – 15th May 2026/),
             ).toBeInTheDocument();
         });
     });

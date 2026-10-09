@@ -215,7 +215,7 @@ export const careerData = [
         role: "Freelance Full Stack Developer",
         organization: "Client Engagement (WholeSaleManager)",
         location: "Remote",
-        period: "June 2025 – Present",
+        period: "June 2025 – 15th May 2026",
         type: "Experience",
         summary:
             "Designed and delivered full-stack ERP architecture to digitize operations, HR, inventory, and finances for a wholesale business.",

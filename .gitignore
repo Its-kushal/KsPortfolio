@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+todo.txt
+master-prompt.txt
+project-audit/
+commits_to_do.txt

@@ -1,5 +1,6 @@
 import ResumeView from "../components/terminal/ResumeView";
 import TerminalProjectsView from "../components/terminal/TerminalProjectsView";
+import TerminalCareerView from "../components/terminal/TerminalCareerView";
 import TerminalContactView from "../components/terminal/TerminalContactView";
 import { personalInfo } from "./portfolioData";
 
@@ -13,6 +14,11 @@ export const terminalContent = [
         id: "projects",
         label: "$ ls projects/",
         output: <TerminalProjectsView />,
+    },
+    {
+        id: "career",
+        label: "$ git log --career",
+        output: <TerminalCareerView />,
     },
     {
         id: "resume",

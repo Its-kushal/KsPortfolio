@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, afterEach } from "vitest";
-import { render, screen, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import TerminalLayout from "../components/terminal/TerminalLayout";
 import { ThemeProvider } from "../context/ThemeContext";
@@ -35,6 +35,11 @@ describe("TerminalLayout Component", () => {
         expect(
             screen.getByRole("button", { name: /Execute \$ ls projects\//i }),
         ).toBeInTheDocument();
+        expect(
+            screen.getByRole("button", {
+                name: "Execute $ git log --career",
+            }),
+        ).toBeInTheDocument();
     });
 
     it("allows clicking a command to execute it", async () => {
@@ -69,6 +74,67 @@ describe("TerminalLayout Component", () => {
         expect(screen.getByText(/\$ ls -la projects\//i)).toBeInTheDocument();
         expect(
             screen.getByText("TradingAlgos: High-Frequency Trading Engine"),
+        ).toBeInTheDocument();
+    });
+
+    it("places the career command between Projects and Resume", () => {
+        renderTerminal();
+        fireEvent.keyDown(window, { key: "Escape" });
+
+        const commands = screen
+            .getAllByRole("button", { name: /^Execute /i })
+            .map((btn) => btn.getAttribute("aria-label"));
+
+        const projectsIdx = commands.findIndex((label) =>
+            label?.includes("$ ls projects/"),
+        );
+        const careerIdx = commands.findIndex((label) =>
+            label?.includes("$ git log --career"),
+        );
+        const resumeIdx = commands.findIndex((label) =>
+            label?.includes("$ cat resume.pdf"),
+        );
+
+        expect(projectsIdx).toBeGreaterThanOrEqual(0);
+        expect(careerIdx).toBeGreaterThan(projectsIdx);
+        expect(resumeIdx).toBeGreaterThan(careerIdx);
+    });
+
+    it("displays the career timeline when the career command is clicked", async () => {
+        const user = userEvent.setup();
+        renderTerminal();
+        fireEvent.keyDown(window, { key: "Escape" });
+
+        const careerBtn = screen.getByRole("button", {
+            name: "Execute $ git log --career",
+        });
+
+        await user.click(careerBtn);
+
+        const careerRegion = screen.getByRole("region", {
+            name: "Career Timeline",
+        });
+        expect(careerRegion).toBeInTheDocument();
+        expect(
+            within(careerRegion).getByText("$ git log --career"),
+        ).toBeInTheDocument();
+    });
+
+    it("displays the career timeline when navigated via keyboard arrows and selected with Enter", () => {
+        renderTerminal();
+        fireEvent.keyDown(window, { key: "Escape" });
+
+        // From index 0 ($ cat about_me) -> Down to index 1 ($ ls projects/) -> Down to index 2 ($ git log --career)
+        fireEvent.keyDown(window, { key: "ArrowDown" });
+        fireEvent.keyDown(window, { key: "ArrowDown" });
+        fireEvent.keyDown(window, { key: "Enter" });
+
+        const careerRegion = screen.getByRole("region", {
+            name: "Career Timeline",
+        });
+        expect(careerRegion).toBeInTheDocument();
+        expect(
+            within(careerRegion).getByText("$ git log --career"),
         ).toBeInTheDocument();
     });
 });
